@@ -1,5 +1,5 @@
 # docker-tomcat-native-reduced
-Docker image based in Alpine and with java 8.45.14 jdk from Oracle installed along with maven 3.3.9 and tomcat 8 with native library loaded
+Docker image based in Alpine and with java 8.45.14 jdk from Oracle installed along with tomcat 8 and native library loaded
 
 # Overview
 This image is intended to provide a small docker base image for using tomcat 8 with APR native library, useful for production environment
