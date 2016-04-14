@@ -1,8 +1,8 @@
-# docker-java-reduced
-Docker image based in Alpine and with java 8.45.14 jdk from Oracle installed along with maven 3.3.9
+# docker-tomcat-native-reduced
+Docker image based in Alpine and with java 8.45.14 jdk from Oracle installed along with maven 3.3.9 and tomcat 8 with native library loaded
 
 # Overview
-This image is intended to provide a small docker base image fully functional in terms of Java development and Maven.
+This image is intended to provide a small docker base image for using tomcat 8 with APR native library, useful for production environment
 
 The idea behind installing maven is to provide to the developer the facility of pulling her artifacts from a nexus repository specifying the version.
 
@@ -24,10 +24,22 @@ docker build -t <org_id>/<image_name>
 
 The image create the next environment variables
 ```
+JAVA_VERSION_BUILD=14
+HOSTNAME=3c49fa1415a1
+CATALINA_HOME=/opt/tomcat
+JAVA_VERSION_MAJOR=8
+TOMCAT_HTTPS_PORT=443
+TOMCAT_MAJOR_VERSION=8
 MAVEN_OPTS=-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/jdk/bin:/opt/apache-maven-3.3.9/bin:/opt/tomcat/bin
 JAVA_HOME=/opt/jdk
+TOMCAT_HTTP_PORT=8080
+HOME=/root
 M2_HOME=/opt/apache-maven-3.3.9
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/jdk/bin:/opt/apache-maven-3.3.9/bin
+JAVA_PACKAGE=jdk
+TOMCAT_MINOR_VERSION=8.0.11
+TOMCAT_JPDA_PORT=5005
+JAVA_VERSION_MINOR=45
 ```
 # Use
 
@@ -37,6 +49,23 @@ It's also recommended if this image is to be used as a base image for other dock
  
  building, removing dependencies loaded from ${HOME}/.m2/repository along with the maven installation ${M2_HOME}.
  
+ For customizing Tomcat installation, its recommended to use this image as a base and ADD or COPY the customized configuration files.
+ 
+```
+FROM nachetecanon/tomcat-native-alpine
+
+
+##### ENV VARIABLES ######
+ENV TOMCAT_HTTP_PORT 8080
+
+ADD tomcatconf/server.xml $CATALINA_HOME/conf/
+
+EXPOSE $TOMCAT_HTTP_PORT
+
+
+# run
+CMD ["/opt/tomcat/bin/catalina.sh","run" ]
+```
 # Size
 
-The size of the built image is about 379M.
+The size of the built image is about 402M.
